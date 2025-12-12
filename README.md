@@ -1,3 +1,9 @@
+FRONTEND
+hacer: npm install -g @angular/cli
+ng new frontend
+
+
+BACKEND
 hacer: npm init
 
 descargar:
