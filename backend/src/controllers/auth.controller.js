@@ -7,89 +7,128 @@ const authModel = require("../models/auth.model");
 
 
 const register = async (req, res) => {
-    // Recoger datos de la peticion
-    const { name, email, password} = req.body;
+    try {
+        // Recoger datos de la peticion
+        const { name, email, password } = req.body;
 
-    // Validar si estan todas las propiedades
-    if( authModel.missingPropertyRegister(name, email, password)) {
-        res.status(401).json({
-            message: "Invalid credentials",
-            error: "Missing properties"
-        });
-    }
-    // Validar email
-    if( !authModel.validEmail(email) ) {
-        res.status(401).json({
-            message: "Invalid credentials:",
-            error: "Invalid email"
-        });
-    }
-    // Validar contraseña minima
-    if( !authModel.minimumPsw(password) ) {
-        res.status(401).json({
-            message: "Invalid credentials",
-            error: "The password must contain 8 characters and 1 number"
-        });
-    }
-
-    //TODO Hacer consulta para buscar al usuario por mail (si esta, tiramos error)
-
-    // Hacer consulta para guardar en la base de datos
-    res.status(201).json({
-        message: "User successfully created",
-        user: {
-            name, email, password
+        // Validar si estan todas las propiedades
+        if( authModel.missingPropertyRegister(name, email, password)) {
+            return res.status(401).json({
+                message: "Invalid credentials",
+                error: "Missing properties"
+            });
         }
-    });
+        // Validar email
+        if( !authModel.validEmail(email) ) {
+            return res.status(401).json({
+                message: "Invalid credentials:",
+                error: "Invalid email"
+            });
+        }
+        // Validar contraseña minima
+        if( !authModel.minimumPsw(password) ) {
+            return res.status(401).json({
+                message: "Invalid credentials",
+                error: "The password must contain 8 characters and 1 number"
+            });
+        }
+
+        //Hacer consulta para buscar al usuario por mail (si esta, tiramos error)
+        const existingUser = await authModel.findUserByEmail(email);
+
+        if( existingUser ){
+            return res.status(409).json({
+                message: "Conflict",
+                error: "Email already in use"
+            })
+        }
+
+        // Encripto la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Hacer consulta para guardar en la base de datos
+        const newUser = await authModel.registerUser([name, email, hashedPassword]);
+
+        return res.status(201).json({
+            message: "User successfully created",
+            user: {
+                id: newUser.insertId, name, email
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
 };
 
 const login = async (req, res) => {
-    // Recoger datos de la peticion
-    const { email, password } = req.body;
+    try {
+        // Recoger datos de la peticion
+        const { email, password } = req.body;
 
-    // Validar si estan todas las propiedades
-    if( authModel.missingPropertyLogin(email, password)) {
-        res.status(401).json({
-            message: "Invalid credentials",
-            error: "Missing properties"
+        // Validar si estan todas las propiedades
+        if( authModel.missingPropertyLogin(email, password)) {
+            res.status(401).json({
+                message: "Invalid credentials",
+                error: "Missing properties"
+            });
+        }
+
+        //hacer consulta para buscar al usuario por mail (si no esta, tiramos error)
+        const user = await authModel.findUserByEmail(email);
+
+        // Comparo la contraseña de la base de datos con la ingresada
+        const valid = await bcrypt.compare(password, user.password);
+
+        if( !valid ) {
+            res.status(401).json({
+                message: "Invalid credentials",
+                error: "The password must contain 8 characters and 1 number"
+            });
+        }
+
+        // Hacer conuslta para actualizar metricas
+        await authModel.updateMetrics(user.id)
+
+        // Creo el token
+        const token = jwt.sign( 
+            { id: user.id, email: user.email }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: "2h" }
+        );
+        return res.status(200).json({
+            message: "Successful login",
+            token,
+            user: { id: user.id, email: user.email }
+        })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
         });
     }
-
-    //TODO hacer consulta para buscar al usuario por mail (si no esta, tiramos error)
-
-    // Comparo la contraseña de la base de datos con la ingresada
-    const valid = await bcrypt.compare(password, user.password);
-
-    if( !valid ) {
-        res.status(401).json({
-            message: "Invalid credentials",
-            error: "The password must contain 8 characters and 1 number"
-        });
-    }
-
-    //TODO hacer conuslta para actualizar metricas
-
-    // Creo el token
-    const token = jwt.sign( 
-        { id: user.id, email: user.email }, 
-        process.env.JWT_SECRET, 
-        { expiresIn: "2h" }
-    );
-    res.status(200).json({
-        message: "Successful login",
-        token,
-        user: { id: user.id, email: user.email }
-    })
+    
 };
 
 const me = async (req, res) => {
-    const { id } = req.user;
+    try {
+        const { id } = req.user; // El middleware ya agregó el usuario al request
 
-    //TODO hacer consulta para pbtener los datos de ese usuario
-    res.status(200).json({
-        message: "User successfully obtained",
-        user
-    });
+        const user = await authModel.me(id);
+        console.log(user);
+
+        return res.status(200).json({
+            message: "User successfully obtained",
+            user
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
 };
 
 module.exports = {
@@ -97,4 +136,3 @@ module.exports = {
     login,
     me,
 }
-
