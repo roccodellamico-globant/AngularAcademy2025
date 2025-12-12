@@ -14,8 +14,4 @@ router.post("/register", register);
 router.post("/login", login);
 router.get("/me", authMiddleware, me);
 
-console.log("register =", register);
-console.log("login =", login);
-console.log("me =", me);
-
 module.exports = router;
