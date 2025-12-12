@@ -15,11 +15,11 @@ app.use(express.json());
 
 // Cargar configuracion de rutas
 const authRoutes = require("./src/routes/auth.routes");
-//const metricsRoutes = require("./src/routes/metrics.routes");
+const metricsRoutes = require("./src/routes/metrics.routes");
 
 // Rutas de la API
 app.use("/api/auth", authRoutes);
-//app.use("api/metrics", metricsRoutes);
+app.use("/api/metrics", metricsRoutes);
 
 
 app.listen(process.env.PORT, () => {
