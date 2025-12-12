@@ -2,9 +2,12 @@ FRONTEND
 hacer: npm install -g @angular/cli
 ng new frontend
 
+coorer el proyecto: ng serve -o
 
 BACKEND
 hacer: npm init
+
+correr el proyecto npm run dev
 
 descargar:
 npm install --save-dev nodemon
