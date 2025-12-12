@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // Importar el modelo
-const authModel = require("../models/auth.model");
+const authService = require("../services/auth.service");
 
 
 const register = async (req, res) => {
@@ -12,21 +12,21 @@ const register = async (req, res) => {
         const { name, email, password } = req.body;
 
         // Validar si estan todas las propiedades
-        if( authModel.missingPropertyRegister(name, email, password)) {
+        if( authService.missingPropertyRegister(name, email, password)) {
             return res.status(401).json({
                 message: "Invalid credentials",
                 error: "Missing properties"
             });
         }
         // Validar email
-        if( !authModel.validEmail(email) ) {
+        if( !authService.validEmail(email) ) {
             return res.status(401).json({
                 message: "Invalid credentials:",
                 error: "Invalid email"
             });
         }
         // Validar contraseña minima
-        if( !authModel.minimumPsw(password) ) {
+        if( !authService.minimumPsw(password) ) {
             return res.status(401).json({
                 message: "Invalid credentials",
                 error: "The password must contain 8 characters and 1 number"
@@ -34,7 +34,9 @@ const register = async (req, res) => {
         }
 
         //Hacer consulta para buscar al usuario por mail (si esta, tiramos error)
-        const existingUser = await authModel.findUserByEmail(email);
+        console.log(email)
+        const existingUser = await authService.findUserByEmail(email);
+        console.log(existingUser)
 
         if( existingUser ){
             return res.status(409).json({
@@ -47,7 +49,7 @@ const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Hacer consulta para guardar en la base de datos
-        const newUser = await authModel.registerUser([name, email, hashedPassword]);
+        const newUser = await authService.registerUser([name, email, hashedPassword]);
 
         return res.status(201).json({
             message: "User successfully created",
@@ -67,9 +69,10 @@ const login = async (req, res) => {
     try {
         // Recoger datos de la peticion
         const { email, password } = req.body;
+        console.log(email, password)
 
         // Validar si estan todas las propiedades
-        if( authModel.missingPropertyLogin(email, password)) {
+        if( authService.missingPropertyLogin(email, password)) {
             res.status(401).json({
                 message: "Invalid credentials",
                 error: "Missing properties"
@@ -77,7 +80,14 @@ const login = async (req, res) => {
         }
 
         //hacer consulta para buscar al usuario por mail (si no esta, tiramos error)
-        const user = await authModel.findUserByEmail(email);
+        const user = await authService.findUserByEmail(email);
+
+        if( !user ) {
+            console.log("not user")
+            return res.status(404).json({
+                message: "User not foud",
+            });
+        }
 
         // Comparo la contraseña de la base de datos con la ingresada
         const valid = await bcrypt.compare(password, user.password);
@@ -90,7 +100,7 @@ const login = async (req, res) => {
         }
 
         // Hacer conuslta para actualizar metricas
-        await authModel.updateMetrics(user.id)
+        await authService.updateMetrics(user.id)
 
         // Creo el token
         const token = jwt.sign( 
@@ -116,13 +126,14 @@ const me = async (req, res) => {
     try {
         const { id } = req.user; // El middleware ya agregó el usuario al request
 
-        const user = await authModel.me(id);
+        const user = await authService.me(id);
         console.log(user);
 
         return res.status(200).json({
             message: "User successfully obtained",
             user
         });
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({

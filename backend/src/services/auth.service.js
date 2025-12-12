@@ -22,7 +22,7 @@ const missingPropertyLogin = (email, password) => {
   return false;
 }
 
-const findUserByEmail = async (email, callback) => {
+const findUserByEmail = async (email) => {
   const query = "SELECT * FROM users WHERE email = ?";
 
   const queryResult = await db.query(query, [email]);

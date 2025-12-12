@@ -9,6 +9,16 @@ const getUserMetrics = async (id) => {
     return result;
 };
 
+const getAdminMetrics = async () => {
+    const query = "SELECT DISTINCT email, last_login, login_count FROM users"
+
+    const queryResult = await db.query(query);
+    const result = queryResult[0]
+
+    return result;
+}
+
 module.exports = {
     getUserMetrics,
+    getAdminMetrics
 };

@@ -8,7 +8,6 @@ const { login, register, me } = require("../controllers/auth.controller");
 // Importar middleware de auth
 const { authMiddleware } = require("../middleware/auth.middleware");
 
-
 // Definir rutas
 router.post("/register", register);
 router.post("/login", login);
