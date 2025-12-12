@@ -3,14 +3,13 @@ const express = require("express");
 const router = express.Router();
 
 // Importar metodos de controladores
-const metricsController = require("../controllers/metrics.controller");
-
+const { getUserMetrics } = require("../controllers/metrics.controller");
 // Importar middleware de auth
-const authMiddelware = require("../middleware/auth.middleware");
-
+const { authMiddleware } = require("../middleware/auth.middleware");
 
 // Definir rutas
-router.get("/user", authMiddelware, metricsController.userMetrics);
-//router.get("/admin", authMiddelware, metricsController.adminMetrics);
+router.get("/user", authMiddleware, getUserMetrics);
+//router.get("/admin", authMiddleware, adminMetrics);
+
 
 module.exports = router;
