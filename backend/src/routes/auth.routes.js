@@ -6,12 +6,16 @@ const router = express.Router();
 const { login, register, me } = require("../controllers/auth.controller");
 
 // Importar middleware de auth
-const authMiddleware = require("../middleware/auth.middleware");
+const { authMiddleware } = require("../middleware/auth.middleware");
 
 
 // Definir rutas
 router.post("/register", register);
 router.post("/login", login);
-//router.get("/me", authMiddleware, me);
+router.get("/me", authMiddleware, me);
+
+console.log("register =", register);
+console.log("login =", login);
+console.log("me =", me);
 
 module.exports = router;
