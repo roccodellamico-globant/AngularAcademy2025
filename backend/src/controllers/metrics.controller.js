@@ -1,13 +1,21 @@
-// Importar el modelo
 const metricsModel = require("../models/metrics.model");
 
-const userMetrics = async (req, res) => {
-    const { id } = req.user;
+const getUserMetrics = async (req, res) => {
+    try {
+        const { id } = req.user;
 
-    //TODO hacer consulta ultimo login y catidad de logins
+        const metrics = await metricsModel.getUserMetrics(id);
 
-    res.status(200).json({
-        message: "User metrics",
-        metrics
-    });
+        return res.status(200).json({
+            message: "User metrics",
+            metrics
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
 };
+
+module.exports = { getUserMetrics };
