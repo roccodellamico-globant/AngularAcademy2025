@@ -14,6 +14,7 @@ const getUserMetrics = async (req, res) => {
         console.error(error);
         return res.status(500).json({
             message: "Internal server error",
+            error: "Please try again later",
         });
     }
 };
@@ -31,7 +32,8 @@ const getAdminMetrics = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).json({
-            message: "Internal server error"
+            message: "Internal server error",
+            error: "Please try again later",
         })
     }
 };

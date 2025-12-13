@@ -61,6 +61,7 @@ const register = async (req, res) => {
         console.error(error);
         return res.status(500).json({
             message: "Internal server error",
+            error: "Please try again later"
         });
     }
 };
@@ -85,7 +86,8 @@ const login = async (req, res) => {
         if( !user ) {
             console.log("not user")
             return res.status(404).json({
-                message: "User not foud",
+                message: "User not found",
+                error: "No user found with the provided email or password"
             });
         }
 
@@ -117,6 +119,7 @@ const login = async (req, res) => {
         console.error(error);
         return res.status(500).json({
             message: "Internal server error",
+            error: "Please try again later"
         });
     }
     
@@ -138,6 +141,7 @@ const me = async (req, res) => {
         console.error(error);
         return res.status(500).json({
             message: "Internal server error",
+            error: "Please try again later"
         });
     }
 };
