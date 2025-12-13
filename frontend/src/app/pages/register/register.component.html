@@ -1,0 +1,101 @@
+<h1>Register</h1>
+<hr>
+
+<form (ngSubmit)="submitForm()" [formGroup]="registerForm" style="padding: 50px;">
+
+  <!-- Campo de Name -->
+  <div>
+    <label for="name">Name</label>
+    <input
+      id="name"
+      type="text"
+      formControlName="name"
+      placeholder="Ingrese su nombre"
+      [ngClass]="{'is-invalid': hasError('name', 'required')}"
+    />
+  </div>
+
+  <!-- Campo de Email -->
+  <div>
+    <label for="email">Email</label>
+    <input
+      id="email"
+      type="email"
+      formControlName="email"
+      placeholder="Ingrese su email"
+      [ngClass]="{'is-invalid': hasError('email', 'required') || hasError('email', 'email')}"
+    />
+  </div>
+
+  <!-- Campo de Contraseña -->
+  <div>
+    <label for="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      formControlName="password"
+      placeholder="Ingrese su contraseña"
+      [ngClass]="{'is-invalid': hasError('password', 'required') || hasError('password', 'minlength')}"
+    />
+  </div>
+
+  <!-- Campo de Validar Contraseña -->
+  <div>
+    <label for="password">Password again</label>
+    <input
+      id="passwordAgain"
+      type="password"
+      formControlName="passwordAgain"
+      placeholder="Ingrese su contraseña"
+      [ngClass]="{'is-invalid': hasError('password', 'required') || hasError('passwordAgain', 'mismatch')}"
+    />
+  </div>
+
+  <!-- Botón de Enviar -->
+  <div>
+    <button type="submit" [disabled]="registerForm.invalid || isLoading()">
+      {{ isLoading() ? 'Cargando...' : 'Registrar' }}
+    </button>
+  </div>
+
+  <!-- Enlace a Login -->
+  <div style="margin-top: 10px;">
+    <a routerLink="/login">Ya tienes cuenta? Iniciar sesion</a>
+  </div>
+
+  @if (hasError('name', 'required')) {
+    <div style="color: red; margin-bottom: 15px;">
+      El nombre es obligatorio.
+    </div>
+  } @else if (hasError('email', 'required')) {
+    <div style="color: red; margin-bottom: 15px;">
+      El email es obligatorio.
+    </div>
+  } @else if (hasError('email', 'email')) {
+    <div style="color: red; margin-bottom: 15px;">
+      El formato del email no es válido.
+    </div>
+  } @else if (hasError('password', 'required')) {
+    <div style="color: red; margin-bottom: 15px;">
+      La contraseña es obligatoria.
+    </div>
+  } @else if (hasError('password', 'pattern')) {
+    <div style="color: red">
+      La contraseña debe tener al menos 8 caracteres y 1 número.
+    </div>
+  } @else if (hasError('passwordAgain', 'required')) {
+    <div style="color: red; margin-bottom: 15px;">
+      La validación de la contraseña es obligatoria.
+    </div>
+  } @else if (hasError('passwordAgain', 'mismatch')) {
+    <div style="color: red; margin-bottom: 15px;">
+      Las contraseñas no coinciden.
+    </div>
+  } @else if (backendError()) {
+    <div style="color: red; margin-bottom: 15px;">
+      {{ backendError() }}
+    </div>
+  }
+
+</form>
+

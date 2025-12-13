@@ -1,0 +1,60 @@
+<h1>Login</h1>
+<hr>
+
+<form [formGroup]="loginForm" (ngSubmit)="submitForm()" style="padding: 50px; max-width: 400px;">
+
+  <!-- Campo de Email -->
+  <div>
+    <label for="email">Email</label>
+    <input
+      id="email"
+      type="email"
+      formControlName="email"
+      placeholder="Ingrese su email"
+      [ngClass]="{'is-invalid': hasError('email', 'required') || hasError('email', 'email')}"
+    />
+  </div>
+
+  <!-- Campo de Contraseña -->
+  <div>
+    <label for="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      formControlName="password"
+      placeholder="Ingrese su contraseña"
+      [ngClass]="{'is-invalid': hasError('password', 'required')}"
+    />
+  </div>
+
+  <!-- Botón de Enviar -->
+  <div>
+    <button type="submit" [disabled]="loginForm.invalid || isLoading()">
+      {{ isLoading() ? 'Cargando...' : 'Ingresar' }}
+    </button>
+  </div>
+
+  <!-- Enlace a Registro -->
+  <div style="margin-top: 10px;">
+    <a routerLink="/register">¿No tienes cuenta? Regístrate</a>
+  </div>
+
+  @if (hasError('email', 'required')) {
+    <div style="color: red; margin-bottom: 15px;">
+      El email es obligatorio.
+    </div>
+  } @else if (hasError('email', 'email')) {
+    <div style="color: red; margin-bottom: 15px;">
+      El formato del email no es válido.
+    </div>
+  } @else if (hasError('password', 'required')) {
+    <div style="color: red; margin-bottom: 15px;">
+      La contraseña es obligatoria.
+    </div>
+  } @else if (backendError()) {
+    <div style="color: red; margin-bottom: 15px;">
+      {{ backendError() }}
+    </div>
+  }
+
+</form>

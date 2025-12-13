@@ -2,6 +2,8 @@ FRONTEND
 hacer: npm install -g @angular/cli
 ng new frontend
 
+httpclient
+
 coorer el proyecto: ng serve -o
 
 BACKEND

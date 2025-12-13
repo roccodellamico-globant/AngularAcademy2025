@@ -1,0 +1,39 @@
+@if (isLoading()) {
+  <p>Cargando métricas...</p>
+}
+
+@else if (error()) {
+  <p style="color: red;">
+    {{ error() }}
+  </p>
+}
+
+@else if (metrics().length === 0) {
+  <p>No hay métricas para mostrar.</p>
+}
+
+@else {
+  <table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Último login</th>
+        <th>Cantidad de logins</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (metric of metrics(); track $index) {
+        <tr>
+          <td>
+            @if (metric.last_login) {
+              {{ metric.last_login | date:'dd/MM/yyyy HH:mm' }}
+            } @else {
+              —
+            }
+          </td>
+          <td>{{ metric.login_count }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
