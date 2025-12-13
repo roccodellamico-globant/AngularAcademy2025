@@ -74,7 +74,7 @@ const login = async (req, res) => {
 
         // Validar si estan todas las propiedades
         if( authService.missingPropertyLogin(email, password)) {
-            res.status(401).json({
+            return res.status(401).json({
                 message: "Invalid credentials",
                 error: "Missing properties"
             });
@@ -95,14 +95,11 @@ const login = async (req, res) => {
         const valid = await bcrypt.compare(password, user.password);
 
         if( !valid ) {
-            res.status(401).json({
+            return res.status(401).json({
                 message: "Invalid credentials",
-                error: "The password must contain 8 characters and 1 number"
+                error: "The password is incorrect"
             });
         }
-
-        // Hacer conuslta para actualizar metricas
-        await authService.updateMetrics(user.id)
 
         // Creo el token
         const token = jwt.sign( 
@@ -110,6 +107,10 @@ const login = async (req, res) => {
             process.env.JWT_SECRET, 
             { expiresIn: "2h" }
         );
+
+        // Hacer conuslta para actualizar metricas
+        await authService.updateMetrics(user.id)
+
         return res.status(200).json({
             message: "Successful login",
             token,
