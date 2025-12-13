@@ -10,7 +10,7 @@ const getUserMetrics = async (id) => {
 };
 
 const getAdminMetrics = async () => {
-    const query = "SELECT DISTINCT email, last_login, login_count FROM users"
+    const query = "SELECT id, name, email, last_login, login_count FROM users";
 
     const queryResult = await db.query(query);
     const result = queryResult[0]
