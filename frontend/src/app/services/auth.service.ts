@@ -48,7 +48,7 @@ export class AuthService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Error inesperado';
+    let errorMessage = 'Unexpected error';
 
     if (error.error?.message) {
       errorMessage = `${error.error?.message}: ${error.error?.error}`
