@@ -7,5 +7,6 @@ import { AdminMetricsComponent } from "../../components/adminMetrics/admin-metri
   selector: 'app-metrics',
   imports: [MeComponent, UserMetricsComponent, AdminMetricsComponent],
   templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent { }

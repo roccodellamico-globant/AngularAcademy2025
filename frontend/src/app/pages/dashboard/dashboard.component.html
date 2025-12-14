@@ -1,13 +1,22 @@
-<h1>DashBoard</h1>
-<hr>
-<section>
-  <h2>User Metrics</h2>
-  <hr>
-  <app-me></app-me>
-  <app-user-metrics></app-user-metrics>
-</section>
-<section>
-  <h2>Admin Metrics</h2>
-  <hr>
-  <app-admin-metrics></app-admin-metrics>
-</section>
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center bg-disney">
+  <div class="card shadow-lg my-5 p-4 dashboard-card">
+    <div class="text-center mb-4">
+        <h1 class="dashboard-h1 fw-bold">User DashBoard</h1>
+    </div>
+    <section>
+      <app-me></app-me>
+      <app-user-metrics></app-user-metrics>
+    </section>
+  </div>
+</div>
+
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center bg-disney">
+  <div class="card shadow-lg my-5 p-4 dashboard-card">
+    <div class="text-center mb-4">
+        <h1 class="dashboard-h1 fw-bold">Admin DashBoard</h1>
+    </div>
+    <section>
+      <app-admin-metrics></app-admin-metrics>
+    </section>
+  </div>
+</div>
