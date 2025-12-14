@@ -20,6 +20,7 @@ const passwordMatchValidator = (control: AbstractControl): ValidationErrors | nu
   selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './register.component.html',
+  styleUrl: './register.component.css'
 })
 export class RegisterComponent {
   backendError = signal('');

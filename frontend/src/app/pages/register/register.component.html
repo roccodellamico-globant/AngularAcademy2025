@@ -1,101 +1,115 @@
-<h1>Register</h1>
-<hr>
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center bg-disney">
+    <div class="card shadow-lg my-5 p-4 register-card">
+      <div class="text-center mb-4">
+        <img src="disney-parks-logo.png" alt="disney-parks" class="disney-image">
+        <h1 class="register-h1 fw-bold">Register</h1>
+      </div>
 
-<form (ngSubmit)="submitForm()" [formGroup]="registerForm" style="padding: 50px;">
+      <form (ngSubmit)="submitForm()" [formGroup]="registerForm">
+        <!-- Name -->
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            id="name"
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Mickey Mouse"
+            [ngClass]="{'is-invalid': hasError('name', 'required')}"
+          />
+        </div>
 
-  <!-- Campo de Name -->
-  <div>
-    <label for="name">Name</label>
-    <input
-      id="name"
-      type="text"
-      formControlName="name"
-      placeholder="Ingrese su nombre"
-      [ngClass]="{'is-invalid': hasError('name', 'required')}"
-    />
-  </div>
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            id="email"
+            type="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="mickey@disney.com"
+            [ngClass]="{'is-invalid': hasError('email', 'required') || hasError('email', 'email')}"
+          />
+        </div>
 
-  <!-- Campo de Email -->
-  <div>
-    <label for="email">Email</label>
-    <input
-      id="email"
-      type="email"
-      formControlName="email"
-      placeholder="Ingrese su email"
-      [ngClass]="{'is-invalid': hasError('email', 'required') || hasError('email', 'email')}"
-    />
-  </div>
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="••••••••"
+            [ngClass]="{'is-invalid': hasError('password', 'required') || hasError('password', 'minlength')}"
+          />
+        </div>
 
-  <!-- Campo de Contraseña -->
-  <div>
-    <label for="password">Password</label>
-    <input
-      id="password"
-      type="password"
-      formControlName="password"
-      placeholder="Ingrese su contraseña"
-      [ngClass]="{'is-invalid': hasError('password', 'required') || hasError('password', 'minlength')}"
-    />
-  </div>
+        <!-- Password Again -->
+        <div class="mb-3">
+          <label for="password">Confirm Password</label>
+          <input
+            id="passwordAgain"
+            type="password"
+            class="form-control"
+            formControlName="passwordAgain"
+            placeholder="••••••••"
+            [ngClass]="{'is-invalid': hasError('password', 'required') || hasError('passwordAgain', 'mismatch')}"
+          />
+        </div>
 
-  <!-- Campo de Validar Contraseña -->
-  <div>
-    <label for="password">Password again</label>
-    <input
-      id="passwordAgain"
-      type="password"
-      formControlName="passwordAgain"
-      placeholder="Ingrese su contraseña"
-      [ngClass]="{'is-invalid': hasError('password', 'required') || hasError('passwordAgain', 'mismatch')}"
-    />
-  </div>
+        <!-- Errores -->
+        @if (hasError('name', 'required')) {
+          <div class="text-danger small mb-2">
+            Name is required.
+          </div>
+        } @else if (hasError('email', 'required')) {
+          <div class="text-danger small mb-2">
+            Email is required.
+          </div>
+        } @else if (hasError('email', 'email')) {
+          <div class="text-danger small mb-2">
+            Invalid email format.
+          </div>
+        } @else if (hasError('password', 'required')) {
+          <div class="text-danger small mb-2">
+            Password is required.
+          </div>
+        } @else if (hasError('password', 'pattern')) {
+          <div class="text-danger small mb-2">
+            Password must contain at least 8 characters and 1 number.
+          </div>
+        } @else if (hasError('passwordAgain', 'required')) {
+          <div class="text-danger small mb-2">
+            Confirm password is required.
+          </div>
+        } @else if (hasError('passwordAgain', 'mismatch')) {
+          <div class="text-danger small mb-2">
+            Passwords do not match.
+          </div>
+        } @else if (backendError()) {
+          <div class="text-danger small mb-2">
+            {{ backendError() }}
+          </div>
+        }
 
-  <!-- Botón de Enviar -->
-  <div>
-    <button type="submit" [disabled]="registerForm.invalid || isLoading()">
-      {{ isLoading() ? 'Cargando...' : 'Registrar' }}
-    </button>
-  </div>
+        <!-- Botón -->
+        <div>
+          <button
+            type="submit"
+            class="btn btn-primary w-100 mt-3"
+            [disabled]="registerForm.invalid || isLoading()">
+            {{ isLoading() ? '✨ Creating account...' : 'Sign Up' }}
+          </button>
+        </div>
 
-  <!-- Enlace a Login -->
-  <div style="margin-top: 10px;">
-    <a routerLink="/login">Ya tienes cuenta? Iniciar sesion</a>
-  </div>
+        <!-- Enlace a Login -->
+        <div class="text-center mt-3">
+          <a routerLink="/login" class="text-decoration-none">
+            Already have an account? <strong>Log in</strong>
+          </a>
+        </div>
 
-  @if (hasError('name', 'required')) {
-    <div style="color: red; margin-bottom: 15px;">
-      El nombre es obligatorio.
+      </form>
     </div>
-  } @else if (hasError('email', 'required')) {
-    <div style="color: red; margin-bottom: 15px;">
-      El email es obligatorio.
-    </div>
-  } @else if (hasError('email', 'email')) {
-    <div style="color: red; margin-bottom: 15px;">
-      El formato del email no es válido.
-    </div>
-  } @else if (hasError('password', 'required')) {
-    <div style="color: red; margin-bottom: 15px;">
-      La contraseña es obligatoria.
-    </div>
-  } @else if (hasError('password', 'pattern')) {
-    <div style="color: red">
-      La contraseña debe tener al menos 8 caracteres y 1 número.
-    </div>
-  } @else if (hasError('passwordAgain', 'required')) {
-    <div style="color: red; margin-bottom: 15px;">
-      La validación de la contraseña es obligatoria.
-    </div>
-  } @else if (hasError('passwordAgain', 'mismatch')) {
-    <div style="color: red; margin-bottom: 15px;">
-      Las contraseñas no coinciden.
-    </div>
-  } @else if (backendError()) {
-    <div style="color: red; margin-bottom: 15px;">
-      {{ backendError() }}
-    </div>
-  }
-
-</form>
-
+</div>
