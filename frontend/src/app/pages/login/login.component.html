@@ -1,60 +1,72 @@
-<h1>Login</h1>
-<hr>
-
-<form [formGroup]="loginForm" (ngSubmit)="submitForm()" style="padding: 50px; max-width: 400px;">
-
-  <!-- Campo de Email -->
-  <div>
-    <label for="email">Email</label>
-    <input
-      id="email"
-      type="email"
-      formControlName="email"
-      placeholder="Ingrese su email"
-      [ngClass]="{'is-invalid': hasError('email', 'required') || hasError('email', 'email')}"
-    />
-  </div>
-
-  <!-- Campo de Contraseña -->
-  <div>
-    <label for="password">Password</label>
-    <input
-      id="password"
-      type="password"
-      formControlName="password"
-      placeholder="Ingrese su contraseña"
-      [ngClass]="{'is-invalid': hasError('password', 'required')}"
-    />
-  </div>
-
-  <!-- Botón de Enviar -->
-  <div>
-    <button type="submit" [disabled]="loginForm.invalid || isLoading()">
-      {{ isLoading() ? 'Cargando...' : 'Ingresar' }}
-    </button>
-  </div>
-
-  <!-- Enlace a Registro -->
-  <div style="margin-top: 10px;">
-    <a routerLink="/register">¿No tienes cuenta? Regístrate</a>
-  </div>
-
-  @if (hasError('email', 'required')) {
-    <div style="color: red; margin-bottom: 15px;">
-      El email es obligatorio.
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center bg-disney">
+  <div class="card shadow-lg p-4 login-card">
+    <div class="text-center mb-4">
+      <img src="disney-parks-logo.png" alt="disney-parks" class="disney-image">
+      <h1 class="login-h1 fw-bold">Login</h1>
     </div>
-  } @else if (hasError('email', 'email')) {
-    <div style="color: red; margin-bottom: 15px;">
-      El formato del email no es válido.
-    </div>
-  } @else if (hasError('password', 'required')) {
-    <div style="color: red; margin-bottom: 15px;">
-      La contraseña es obligatoria.
-    </div>
-  } @else if (backendError()) {
-    <div style="color: red; margin-bottom: 15px;">
-      {{ backendError() }}
-    </div>
-  }
 
-</form>
+    <form [formGroup]="loginForm" (ngSubmit)="submitForm()">
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="mickey@disney.com"
+          [ngClass]="{'is-invalid': hasError('email', 'required') || hasError('email', 'email')}"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          formControlName="password"
+          placeholder="••••••••"
+          [ngClass]="{'is-invalid': hasError('password', 'required')}"
+        />
+      </div>
+
+      <!-- Errores -->
+      @if (hasError('email', 'required')) {
+        <div class="text-danger small mb-2">
+          Email is required.
+        </div>
+      } @else if (hasError('email', 'email')) {
+        <div class="text-danger small mb-2">
+          Invalid email format.
+        </div>
+      } @else if (hasError('password', 'required')) {
+        <div class="text-danger small mb-2">
+          Password is required.
+        </div>
+      } @else if (backendError()) {
+        <div class="text-danger small mb-2">
+          {{ backendError() }}
+        </div>
+      }
+
+       <!-- Botón -->
+      <button
+        type="submit"
+        class="btn btn-primary w-100 mt-3"
+        [disabled]="loginForm.invalid || isLoading()"
+      >
+        {{ isLoading() ? '✨ Loading...' : 'Log In' }}
+      </button>
+
+      <!-- Registro -->
+      <div class="text-center mt-3">
+        <a routerLink="/register" class="text-decoration-none">
+          Don’t have an account? <strong>Sign up</strong>
+        </a>
+      </div>
+    </form>
+
+  </div>
+</div>
