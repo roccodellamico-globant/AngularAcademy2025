@@ -13,25 +13,9 @@
 }
 
 @else {
-  <button (click)="logout()">Logout</button>
+  <button class="btn btn-primary d-flex ms-auto me-0 rounded-5 px-4 my-2" (click)="logout()">Logout</button>
 
-  <div style="border: 1px solid #ccc; padding: 20px; max-width: 400px;">
-    <p><strong>ID:</strong> {{ user()!.id }}</p>
-    <p><strong>Nombre:</strong> {{ user()!.name }}</p>
-    <p><strong>Email:</strong> {{ user()!.email }}</p>
-
-    <p>
-      <strong>Último login:</strong>
-      @if (user()!.last_login) {
-        {{ user()!.last_login | date:'dd/MM/yyyy HH:mm' }}
-      } @else {
-        —
-      }
-    </p>
-
-    <p>
-      <strong>Cantidad de logins:</strong>
-      {{ user()!.login_count }}
-    </p>
+  <div class="">
+    <p>Hola <strong>{{ user()!.name.toUpperCase()}}</strong></p>
   </div>
 }
