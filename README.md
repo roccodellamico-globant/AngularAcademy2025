@@ -1,26 +1,59 @@
-FRONTEND
-hacer: npm install -g @angular/cli
-ng new frontend
+# Proyecto Inicial Angular Academy 2025
 
-httpclient
+## Requisitos
+- Node.js
+- npm
+- MySQL
+- Angular
 
-coorer el proyecto: ng serve -o
+## Como correr el proyecto
 
-BACKEND
-hacer: npm init
+### Clonar el repositorio
+```
+git clone https://github.com/roccodellamico-globant/AngularAcademy2025.git
+```
 
-correr el proyecto npm run dev
+### Frontend
+```
+cd frontend
+npm install
+npm start || ng serve -o
+```
+El frontend queda corriendo en:
+```
+http://localhost:4200
+```
 
-descargar:
-npm install --save-dev nodemon
-npm install express
-npm install bcrypt
-npm install cors
-npm i jsonwebtoken
-npm install mysql2  
-npm i dotenv
+### Backend
+```
+cd backend
+npm install
+|_npm install --save-dev nodemon
+|_npm install express
+|_npm install bcrypt
+|_npm install cors
+|_npm i jsonwebtoken
+|_npm install mysql2  
+|_npm i dotenv
+|_npm run dev
+```
+Crear un archivo .env en /backend
+```
+PORT=4000
+JWT_SECRET=super_secret_key
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=password
+DB_NAME=challenge
+```
+El backend queda corriendo en:
+``` 
+http://localhost:4000
+```
 
-comandos para crear la bases de datos:
+### Base de Datos
+Comandos para crearla
+```
 CREATE DATABASE angularacademy2025;
 USE angularacademy2025;
 CREATE TABLE users (
@@ -32,3 +65,21 @@ CREATE TABLE users (
     login_count INT DEFAULT 0
 );
 DESCRIBE users;
+```
+
+## Features implementadas
+- **Registro** de usuario
+- **Inicio de sesión** con correo electrónico y contraseña
+- **Cifrado** de contraseñas con *bcrypt*
+- **Autenticación** con *JWT*
+- **Rutas** de backend *protegidas*
+- **Persistencia** de la *sesión* de usuario
+- **API REST** desarrollada con *Express*
+- **Frontend** desarrollado con *Angular*
+- **Integración** con base de datos *MySQL*
+
+
+## Arquitectura
+- **Frontend**: Angular
+- **Backend**: Node + Express
+- **Base de datos**: MySQL
